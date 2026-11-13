@@ -1,0 +1,7 @@
+SqueezeDSP Native DSD 0.1.72.1
+
+Based on SqueezeDSP 0.1.72 by Jonathan Fox (MIT license).
+Native DSF/DFF passthrough is preserved. PCM is still processed by SqueezeDSP.
+
+https://github.com/Foxenfurter/SqueezeDSP
+https://github.com/moonknight82/squeezedsp-native-dsd
