@@ -1,0 +1,296 @@
+# string file for package Plugins::SqueezeDSPNativeDSD::Plugin;
+# Part of the SqueezeDSP plugin,
+# This file is licensed to you under the terms described in "Plugin.pm"
+# https://github.com/Foxenfurter/SqueezeDSP
+#
+
+PLUGIN_SQUEEZDSPNATIVEDSD_MODULEDESC
+	EN	SqueezeDSP Native DSD and Room Correction
+
+PLUGIN_SQUEEZDSPNATIVEDSD_DISPLAYNAME
+	EN	SqueezeDSP Native DSD
+
+
+PLUGIN_SQUEEZDSPNATIVEDSD_BANDCENTER
+	EN	Band center frequency:
+
+PLUGIN_SQUEEZDSPNATIVEDSD_BYPASS
+	EN	DSP (Off/On)
+	
+PLUGIN_SQUEEZDSPNATIVEDSD_BYPASS_HELP
+	EN	DSP Off/On - Selecting On will enable DSP processing and selecting Off will bypass all DSP processing. This may be useful if you have multiple players and only want SqueezeDSP active on some of them.
+
+PLUGIN_SQUEEZDSPNATIVEDSD_LOUDNESS
+	EN	Loudness
+	
+PLUGIN_SQUEEZDSPNATIVEDSD_LOUDNESS_HELP
+	EN	Loudness - Switching this on will boost Bass and Treble when playing at lower volumes.
+	
+PLUGIN_SQUEEZDSPNATIVEDSD_LOUDLEVEL
+	EN	Listening Level
+	
+PLUGIN_SQUEEZDSPNATIVEDSD_LOUDLEVEL_HELP
+	EN	Measure the db level at 1000 Hz when playing at lower volumes, or use 70 db as a default.
+	
+PLUGIN_SQUEEZDSPNATIVEDSD_LOUDNESS_OFF
+	EN	(Off)
+
+PLUGIN_SQUEEZDSPNATIVEDSD_PREAMP
+	EN	Preamp (dB)
+
+PLUGIN_SQUEEZDSPNATIVEDSD_PREAMP_HELP
+	EN	Preamp (dB) - The Preamp is used to reduce gain when DSP is being used. This is important because the applying corrections can boost gain levels significantly at certain frequencies and introduce Clipping into the signal. 
+
+PLUGIN_SQUEEZDSPNATIVEDSD_FLATNESS_FLAT
+	EN	(Flat)
+
+PLUGIN_SQUEEZDSPNATIVEDSD_FREQ
+	EN	Freq (HZ)
+
+PLUGIN_SQUEEZDSPNATIVEDSD_GAIN
+	EN	Gain (dB)
+
+PLUGIN_SQUEEZDSPNATIVEDSD_SLOPE
+	EN	Slope (0.1->1)
+
+PLUGIN_SQUEEZDSPNATIVEDSD_SLOPE_HELP
+	EN	Slope - represents the rate of change between normal gain & shelf gain, it uses SoX logic, 0.3 shallow and 1.0 the steepest slope.
+
+PLUGIN_SQUEEZDSPNATIVEDSD_Q_HELP
+	EN	Q - represents the bandwidth of a filter. A low Q e.g. < 1 will be a wide filter and a high Q will be a narrow (notch/peak) filter.
+
+
+PLUGIN_SQUEEZDSPNATIVEDSD_BALANCE
+	EN	Balance
+
+PLUGIN_SQUEEZDSPNATIVEDSD_BALANCE_HELP
+	EN	Balance -  Moving the slider left of centre decreases left channel gain and right decreases the right channel. Double-click to recentre the slider. 
+	
+	
+PLUGIN_SQUEEZDSPNATIVEDSD_WIDTH
+	EN	Width
+
+PLUGIN_SQUEEZDSPNATIVEDSD_WIDTH_HELP
+	EN	Width -  Moving the slider left of centre decreases width effect and right increases width effect. Double-click to recentre the slider. 	
+
+PLUGIN_SQUEEZDSPNATIVEDSD_DELAY
+	EN	Delay (ms)
+
+PLUGIN_SQUEEZDSPNATIVEDSD_DELAY_HELP
+	EN	Delay milliseconds(ms) -  0.1 ms is the equivalent of 3.43 cm or 1.372 inches. Moving the slider left of centre delays the left channel and right delays the right channel. Double-click to recentre the slider. 
+
+PLUGIN_SQUEEZDSPNATIVEDSD_DEPTH
+	EN	Depth
+
+PLUGIN_SQUEEZDSPNATIVEDSD_PEAK
+	EN	Peak
+	
+PLUGIN_SQUEEZDSPNATIVEDSD_PEAK_HELP
+	EN	Peak - Allows you to increase or decrease the gain at a specified frequency, Q is used to define how wide the peak is. Use the sliders to select the peak frequency, gain and Q
+
+PLUGIN_SQUEEZDSPNATIVEDSD_HIGHSHELF
+	EN	High Shelf
+	
+PLUGIN_SQUEEZDSPNATIVEDSD_HIGHSHELF_HELP
+	EN	High Shelf - Allows you to increase or decrease the level of high frequencies above a certain point, or "shelf." Use the sliders to select the shelf frequency, gain and slope
+	
+PLUGIN_SQUEEZDSPNATIVEDSD_LOWSHELF
+	EN	Low Shelf
+	
+PLUGIN_SQUEEZDSPNATIVEDSD_LOWSHELF_HELP
+	EN	Low Shelf - Allows you to increase or decrease the level of low frequencies below a certain point, or "shelf." Use the sliders to select the shelf frequency, gain and slope
+	
+PLUGIN_SQUEEZDSPNATIVEDSD_LOWPASS
+	EN	Low Pass
+	
+PLUGIN_SQUEEZDSPNATIVEDSD_LOWPASS_HELP
+	EN	Low Pass - Any frequency lower than the cutoff frequency will pass through the filter unaffected, while higher frequencies will be reduced or blocked. Use the sliders to select the frequency and steepness of the filter (Q).
+	
+PLUGIN_SQUEEZDSPNATIVEDSD_LOWPASSFREQ
+	EN	Pass Frequencies below:
+
+PLUGIN_SQUEEZDSPNATIVEDSD_HIGHPASS
+	EN	High Pass
+	
+PLUGIN_SQUEEZDSPNATIVEDSD_HIGHPASS_HELP
+	EN	High Pass - Any frequency higher than the cutoff frequency will pass through the filter unaffected, while lower frequencies will be reduced or blocked.	Use the sliders to select the frequency and steepness of the filter (Q).	
+	
+PLUGIN_SQUEEZDSPNATIVEDSD_HIGHPASSFREQ
+	EN	Pass Frequencies above:
+
+PLUGIN_SQUEEZDSPNATIVEDSD_CHOSEN_VALUE
+	EN	Set.
+
+PLUGIN_SQUEEZDSPNATIVEDSD_SETTINGS
+	EN	Settings...
+
+PLUGIN_SQUEEZDSPNATIVEDSD_PRESETS
+	EN	Presets...
+
+PLUGIN_SQUEEZDSPNATIVEDSD_CHOOSE_PRESET
+	EN	Load preset:
+
+PLUGIN_SQUEEZDSPNATIVEDSD_SAVEPRESETAS
+	EN	Save settings:
+
+PLUGIN_SQUEEZDSPNATIVEDSD_FILECHARS
+	EN	abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ -_0123456789
+
+PLUGIN_SQUEEZDSPNATIVEDSD_PRESET_SAVED
+	EN	Preset saved.
+
+PLUGIN_SQUEEZDSPNATIVEDSD_PRESET_HELP
+	EN	Select the preset name in the dropdown and it will automatically load. In order to save the existing settings as a new preset, enter a suitable name for the preset and press Save.<BR>Pressing Reset will set the current settings back to default
+
+PLUGIN_SQUEEZDSPNATIVEDSD_PRESET_LOADED
+	EN	Preset loaded.
+
+PLUGIN_SQUEEZDSPNATIVEDSD_SAVEPRESETFILE
+	EN	Save preset:
+
+PLUGIN_SQUEEZDSPNATIVEDSD_ROOMCORR
+	EN	Load FIR File:
+	
+PLUGIN_SQUEEZDSPNATIVEDSD_ROOMCORR_HELP
+	EN	Load Impulse File - Room correction is automatically applied if an Impulse file is selected. Impulse files should be wav files in mono or stereo and should be saved into the Impulse folder. It is recommended that you save your impulse files at a sampling rate of 44.1K (CD Quality)
+	
+PLUGIN_SQUEEZDSPNATIVEDSD_CLIPPING
+	EN	Levels
+	
+PLUGIN_SQUEEZDSPNATIVEDSD_CLIPPING_HELP
+	EN	Displays Red/Amber/Green/Blue clipping status for the last 10 tracks played by the current player.<BR>red = Clipping<BR>Amber = Borderline<BR>Green = OK<BR>Blue = Levels may be too low <BR> Detailed information can be accessed by hovering/clicking an indicator.
+	
+PLUGIN_SQUEEZDSPNATIVEDSD_PRESETSFILES
+	EN	Presets & Files
+
+PLUGIN_SQUEEZDSPNATIVEDSD_FIRSTRENGTH
+	EN	FIR Strength
+
+PLUGIN_SQUEEZDSPNATIVEDSD_FIRSTRENGTH_HELP
+	EN	FIR filter blend 0-100%. At 0% the convolver is bypassed.
+
+PLUGIN_SQUEEZDSPNATIVEDSD_SIGNAL
+	EN	Signal
+
+PLUGIN_SQUEEZDSPNATIVEDSD_REPLAYGAIN
+	EN	Replay Gain
+
+PLUGIN_SQUEEZDSPNATIVEDSD_REPLAYGAIN_HELP
+	EN	Apply ReplayGain in the DSP engine at 64-bit precision. Disable native ReplayGain in LMS player settings before enabling.
+
+PLUGIN_SQUEEZDSPNATIVEDSD_REPLAYGAIN_WARNING
+	EN	Please disable replay gain for player in LMS
+
+PLUGIN_SQUEEZDSPNATIVEDSD_REPLAYGAIN_FIXED
+	EN	Fixed fallback gain (dB)
+
+PLUGIN_SQUEEZDSPNATIVEDSD_SPOTIFY_GAIN
+	EN	Spotify Gain (dB)
+
+PLUGIN_SQUEEZDSPNATIVEDSD_SPOTIFY_GAIN_HELP
+	EN	Gain applied to Spotify tracks. -4.0 dB aligns Spotify (-14 LUFS) with ReplayGain 1.0 tagged libraries (-18 LUFS).
+
+PLUGIN_SQUEEZDSPNATIVEDSD_PRESET_DELETED
+	EN	Preset deleted
+
+PLUGIN_SQUEEZDSPNATIVEDSD_EQUALIZER_SECTION
+	EN	Equalizer
+
+PLUGIN_SQUEEZDSPNATIVEDSD_IMPORTFILTERS
+	EN	Import Filters
+
+PLUGIN_SQUEEZDSPNATIVEDSD_DROPZONE
+	EN	DROP REW OR FIR WAV FILE HERE...
+
+PLUGIN_SQUEEZDSPNATIVEDSD_CHOOSEFILE
+	EN	Choose REW or WAV File
+
+PLUGIN_SQUEEZDSPNATIVEDSD_HEADPHONEEQ
+	EN	Headphone
+
+PLUGIN_SQUEEZDSPNATIVEDSD_HEADPHONEEQ_EXPERIMENTAL
+	EN	EQ
+
+PLUGIN_SQUEEZDSPNATIVEDSD_HEADPHONEEQ_HELP
+	EN	Search AutoEQ headphone profiles and import 48kHz FIR WAV if available. The WAV file will appear in the FIR dropdown once imported, select it to apply.
+
+PLUGIN_SQUEEZDSPNATIVEDSD_HEADPHONEEQ_PLACEHOLDER
+	EN	Type headphone name (min. 2 chars)...
+
+PLUGIN_SQUEEZDSPNATIVEDSD_CROSSFEED
+	EN	Crossfeed
+
+PLUGIN_SQUEEZDSPNATIVEDSD_CROSSFEED_HELP
+	EN	Headphone crossfeed. Blends a small delayed portion of each channel into the other, reducing in-head localisation.
+
+
+PLUGIN_SQUEEZDSPNATIVEDSD_CHOOSE_RCFILTER
+	EN	Select filter:
+
+PLUGIN_SQUEEZDSPNATIVEDSD_CHOSEN_RCFILTER
+	EN	Room correction filter loaded.
+
+PLUGIN_SQUEEZDSPNATIVEDSD_CHOSEN_RCFILTERNONE
+	EN	Room correction filter unloaded.
+
+PLUGIN_SQUEEZDSPNATIVEDSD_FILTERNONE
+	EN	None
+
+
+PLUGIN_SQUEEZDSPNATIVEDSD_CHOOSE_SETTINGS
+	EN	Settings:
+
+PLUGIN_SQUEEZDSPNATIVEDSD_CHOOSE_EQSETTINGS
+	EN	Select equalizer type:
+
+PLUGIN_SQUEEZDSPNATIVEDSD_EQUALIZER
+	EN	PEQ Bands:
+
+PLUGIN_SQUEEZDSPNATIVEDSD_EQUALIZER_HELP
+	EN	Parametric EQ - allows you to adjust the frequency, gain, and bandwidth (Q) of the equalization, giving you more fine-tuned control over the sound. 
+
+
+PLUGIN_SQUEEZDSPNATIVEDSD_RESTART
+	EN	Please restart SqueezeCenter to finish installation.
+
+PLUGIN_SQUEEZDSPNATIVEDSD_DELAY_UNITS
+	EN	ms
+
+PLUGIN_SQUEEZDSPNATIVEDSD_HERTZ
+	EN	Hz
+
+PLUGIN_SQUEEZDSPNATIVEDSD_KILOHERTZ
+	EN	kHz
+
+PLUGIN_SQUEEZDSPNATIVEDSD_DECIBELS
+	EN	dB
+
+PLUGIN_SQUEEZDSPNATIVEDSD_DECIBELSPEROCTAVE
+	EN	dB/Oct
+
+# Web-page strings
+
+PLUGIN_SQUEEZDSPNATIVEDSD_HTML_EQ
+	EN	EQ
+
+PLUGIN_SQUEEZDSPNATIVEDSD_HTML_AUDIO
+	EN	Audio
+
+PLUGIN_SQUEEZDSPNATIVEDSD_HTML_FILTERS
+	EN	Filters
+
+PLUGIN_SQUEEZDSPNATIVEDSD_HTML_PRESETS
+	EN	Presets
+
+PLUGIN_SQUEEZDSPNATIVEDSD_HTML_ADVANCED
+	EN	Advanced
+
+
+# formats enabled by this plugin
+
+AMB
+	EN	Ambisonics B-Format (.amb)
+
+AAP
+	EN	AACplus
+
