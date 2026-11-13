@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<extension>
+  <name>PLUGIN_SQUEEZDSPNATIVEDSD_DISPLAYNAME</name>
+  <description>PLUGIN_SQUEEZDSPNATIVEDSD_MODULEDESC</description>
+  <module>Plugins::SqueezeDSPNativeDSD::Plugin</module>
+  <version>0.1.72.1</version>
+
+  <creator>Jonathan Fox; native DSD fork by moonknight82</creator>
+  <email></email>
+  <homepageURL>https://github.com/moonknight82/squeezedsp-native-dsd</homepageURL>
+  <icon>/plugins/SqueezeDSPNativeDSD/images/SqueezeDSP_svg.png</icon>
+  <id>3e63a605-3ca1-48cd-ab9b-0551bb644ed2</id>
+  <optionsURL>plugins/SqueezeDSPNativeDSD/index.html</optionsURL>
+  <type>2</type>
+  <defaultState>enabled</defaultState>
+
+  <targetApplication>
+  <id>SqueezeCenter</id>
+   <minVersion>7.8.0</minVersion>
+   <maxVersion>*</maxVersion>
+  </targetApplication>
+</extension>
