@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extensions>
+  <details>
+    <title lang="EN">SqueezeDSP Native DSD</title>
+  </details>
+  <plugins>
+    <plugin name="SqueezeDSPNativeDSD" version="0.1.72.1" minTarget="9.1" maxTarget="*">
+      <title lang="EN">SqueezeDSP Native DSD</title>
+      <desc lang="EN">SqueezeDSP for PCM with native DSF/DFF passthrough preserved.</desc>
+      <changes lang="EN">Preserves LMS native DSF and DFF conversion profiles.</changes>
+      <category>tools</category>
+      <creator>Jonathan Fox; native DSD fork by moonknight82</creator>
+      <link>https://github.com/moonknight82/squeezedsp-native-dsd</link>
+      <url>https://github.com/moonknight82/squeezedsp-native-dsd/releases/download/v0.1.72.1/SqueezeDSPNativeDSD-0.1.72.1.zip</url>
+      <sha>396b2568d2c0605d44f6152a0b73e68953b29c6f</sha>
+    </plugin>
+  </plugins>
+</extensions>
