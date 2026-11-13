@@ -1,0 +1,283 @@
+package Plugins::SqueezeDSPNativeDSD::Plugin;
+=pod version history
+	# ----------------------------------------------------------------------------
+	# SqueezeDSP\Plugin.pm - a SlimServer plugin.
+	# Makes a remote-control user interface, and writes settings files, which
+	# provide parameters for operation of a convolution and filter engine.
+	
+	# ----------------------------------------------------------------------------
+	#
+	#
+	#
+	# Revision history:
+	#
+	#	
+	#
+	0.1.72	Fox: Added support for SpotOn plugin, removing conversion leaves non-competing fmt -> fmt conversion alone.
+	0.1.71	Fox: Updates to core binary outputs mp3 and flac and also transcoding now simpler but requires different cleanup
+	0.1.61	Fox: Force fixing custom-conf.conf re-write and amending headphone dropdown to scale better
+	0.1.60  Fox: Added replay gain, fir filter strength, toggles for panels
+	0.1.51	Fox: Proper empty structure created and returned for new player, error was causing issues on UI
+	0.1.50  Fox: Added a clear log function and added HLS to the fully supported list of formats for transcoding, this should allow support for streaming services that use HLS such as Apple Music and Amazon Music.
+    0.1.41  Fox: css changes to fix minor issues with the UI
+    0.1.40	Fox: Adding a visualiser for PEQ and Loudness Settings
+    0.1.34	Fox: Fix to loading presets, should apply them. Styling change to tooltips.
+    0.1.33	Fox: Revised Binary, new residual cache with expiry time for delay, and convolver leftovers -   
+              Fixed issues with saving and loading presets not retaining preset names
+    0.1.32	Fox: Revised Binary, fixed gapless playback by caching latest player filter & fft, 
+                Fixed gain drop fixed moved tail saver to eradicate race condition. 
+                Tweaked preset load logic so that clientname, ID and Last-Preset are corrected.
+                Amended dynamic application of amended settings so that it will only work if a track is playing.
+    0.1.31	Fox: Revised Binary, fixed gapless playback by caching latest player filter and fixed issue with 24 bit aiff file not being read correctly
+	0.1.30	Fox: Revised behaviour so that player settings are created on the UI and saved here rather than managed here. This simlifies design and communication between the UI and the binary.
+
+	0.1.28	Fox: Found issue where there is only a PEQ filter, then the checks for FIR filter cause early termination.
+	0.1.27	Fox: Found issue where there is no filter of any kind, end of processing tail handler fails and closes prematurely.
+	0.1.26	Fox: Found issue where there is no filter of any kind. Output runs but with zero gain.
+	0.1.25	Fox: Binary using sox for resampling, now that I have figured out the highest quality settings. Normaliser is based off FFT peak, as more accurate - code cleaned
+				Transcoder, fixing issue with alc where the parameter order affects whether transcoding works. 
+	0.1.24	Fox: Fixed issue with cleanup vs REW filters being wrong, now detects where impulse peak is at start of the file and trims accordingly
+				Extended length of PEQ filter, likely inaudible but should be more effective
+				Amended mp3 transcoder so that it works with talkSport. (lame now outputs wav rather than raw)
+	0.1.23	Fox: Changes to binary, Bug fixes - Disable Low/High Pass amd :ow/High Shelf filters no longer build filters
+				Loudness filter working
+				width filter gain neutral, before gain was super-boosted
+				FIR Filters are now trimmed to the point where level is -70 dBFS with a margin and windowing.
+				Fixed Minor issue with convolver when merging fir and PEQ filters
+				This seems to fix the Housecurve filter issue and results in smaller filters that are just as effective
+
+	0.1.22	Fox: Major bug fixes to binary, including:
+				Wav Reader now handles PCM and AIF correctly as well as detecting end of data section for WAV files, this stope early termination
+				Fixed issue with Wav Reader, reading only frame samples rather than the intended block loading of 1/5 second this fixed issue with stuttering
+				Fixed issue with Convolver setting signal length = impulse length. This could cause choking on large impulses as buffers were emptied
+				Reduced buffer sizes for GO Channel processing as no longer needed, reduces memory footprint
+				
+	0.1.21	Fox: Performance improvements to binary following profile runs test in 60% of time
+	0.1.20	Fox: New Binary - using golang
+	0.1.11	Fox: New Binary experimental sopport for MacOS arm 64 native
+	0.1.10	Fox: Initialises log file, added better error handling where it is not created as this was causing failures, added better error handling for JSON reads that were failing
+	0.1.09	Fox: Cleaned up code for updating the preset for a player, so that it won't keep updating for Smart TVs that run polling processes. Added cleanup for preset files deleted bands.
+	0.1.08	Fox: Amended templates for Spotty and prettified the JSON settings at last
+	0.1.07	Fox: Amended mechanism for deriving the settings folder by passing it from the plugin script to the binary via the config file. This should enable MacOs install to work
+	0.1.06	Fox: Revised Binary, impulse loaded and resampled via SoX with no temp file used, SoX resampler was more accurate than new internal one.
+				Convolver code for Impulses revised to use Externl FFT.Calculation as this seems more accurate
+				A number of code tweaks, suggested for improving speed. Mainly optimising loops.
+				Corrected an issue with Low Pass filter, which generated rubbish when approaching Nyquist frequency.
+				Added Loudness fine-tuning and Width processing, and this needed amendments to UI and Perl Script	
+	0.1.05	Fox: New Binary no longer using SoX wrapped but internal library instead. Amending this code to automatically update binaries
+	0.1.04	Fox: Code added in to remove native conversion and competing flac conversions so that SqueezeDSP is the default
+				 this code was reworked from C3P0 plugin.
+	0.1.01	Fox: Added in logging interface, new call will read SqueezeDSP log file.
+	0.1.00	Fox: Binary update PLugin update to version number
+	0.0.98	Fox: New EQ Bands now appearing in correct place, wth no weird defaults
+			New players now have default JSON files created properly
+	0.0.97	Fox: Adding and deleting a frequency band working predictably off a simple default
+	0.0.95	Fox: Commented out references to CamillaDSP, using sox instead. Added fallback default for EQ frequency
+	0.0.92	Fox: Fixed Case sensitive filenames on Linux
+	0.0.91	Fox: Cleaning up for installation
+	0.0.11	Fox: removing Debug settings - ready for release
+	0.0.7 - Fox:
+			Using JSON files for config - that is app config and for the DSP/EQ settings.
+			fixed housekeeping issue
+	0.0.5 - Fox:
+			This is a fully working initial version
+			All code has been migrated to refer to SqueezeDSP
+			code relating to the signal generator has been removed.
+			code relating to the jive menu has been removed and moved into a separate pm file, which is not referenced or used.
+			At this point, I think it is unlikely that the Jive menus will be re-instated
+=cut
+use strict;
+use base qw(Slim::Plugin::Base);
+use Slim::Utils::Misc;
+use Slim::Utils::OSDetect;
+use File::Spec::Functions qw(:ALL);
+use FindBin qw($Bin);
+use Slim::Utils::Log;
+use Slim::Utils::Prefs;
+#test
+use POSIX qw(strftime);  # add this
+use Data::Dumper;
+use Time::HiRes qw(time);
+
+# ======== START: VARIABLE DECLARATIONS ========
+# Package-level declarations (at the top, before any subs)
+our (
+    $log,                # Log object
+    $prefs,              # Preferences object
+    $thisapp,            # Application name
+    $pluginDataDir,      # Main plugin directory
+    $pluginSettingsDataDir, # Settings directory
+    $pluginImpulsesDataDir, # Impulses directory
+    $pluginMatrixDataDir,   # Matrix directory
+    $pluginTempDataDir,     # Temp directory
+    $convolver,          # Convolver name
+    $logfile,            # Log file path
+    $fatalError,         # Fatal error message
+    $needUpgrade,        # Upgrade flag
+    $doneJiveInit,       # Jive init flag
+    $configPath,         # Config path
+    $thistag,            # Plugin tag
+    $myconfigrevision,   # Config revision
+    $binversion,          # Binary version
+	$cacheBust,          # Cache busting token
+	$gainLog          # gain logger
+);
+
+
+# Revision number
+my $revision = "0.1.72.1";
+$binversion = "0_2_40";
+use vars qw($VERSION);
+$VERSION = $revision;
+
+# Names and name-related constants...
+$thistag = "squeezdspnativedsd";
+$thisapp = "SqueezeDSPNativeDSD";
+my $binary;
+my $settingstag = "SqueezeDSPNativeDSDSettings";
+my $confBegin = "SqueezeDSPNativeDSD#begin";
+my $confEnd = "SqueezeDSPNativeDSD#end";
+my $modeAdjust       = "PLUGIN.SqueezeDSPNativeDSD.Adjust";
+my $modeValue        = "PLUGIN.SqueezeDSPNativeDSD.Value";
+my $modePresets      = "PLUGIN.SqueezeDSPNativeDSD.Presets";
+my $modeSettings     = "PLUGIN.SqueezeDSPNativeDSD.Settings";
+my $modeEqualization = "PLUGIN.SqueezeDSPNativeDSD.Equalization";
+my $modeRoomCorr     = "PLUGIN.SqueezeDSPNativeDSD.RoomCorrection";
+my $modeMatrix       = "PLUGIN.SqueezeDSPNativeDSD.Matrix";
+
+our %noFunctions = ();
+#$needUpgrade = 0;
+$fatalError = undef;
+$doneJiveInit = 0;
+# ======== END: VARIABLE DECLARATIONS ========
+
+# Load submodules
+use Plugins::SqueezeDSPNativeDSD::Settings;
+use Plugins::SqueezeDSPNativeDSD::TemplateConfig;
+use Plugins::SqueezeDSPNativeDSD::Configuration;
+use Plugins::SqueezeDSPNativeDSD::UI_Functions;
+use Plugins::SqueezeDSPNativeDSD::Utils;
+use Plugins::SqueezeDSPNativeDSD::Binary;
+
+sub initPlugin {
+    my $class = shift;
+    $class->SUPER::initPlugin( @_ );
+
+    # ======== START: VARIABLE INITIALIZATION ========
+    # Initialize log and preferences
+    $log = Slim::Utils::Log->addLogCategory({ 
+        'category' => 'plugin.' . $thistag, 
+        'defaultLevel' => 'WARN', 
+        'description'  => $thisapp 
+    });
+    $prefs = preferences('plugin.' . $thistag);
+    
+    # Initialize directories
+    my $appdata = Slim::Utils::Prefs::dir();
+    $pluginDataDir = catdir($appdata, $thisapp);
+    mkdir($pluginDataDir);
+    $pluginSettingsDataDir = catdir($pluginDataDir, 'Settings');
+    mkdir($pluginSettingsDataDir);
+    $pluginImpulsesDataDir = catdir($pluginDataDir, 'Impulses');
+    mkdir($pluginImpulsesDataDir);
+    $pluginMatrixDataDir = catdir($pluginDataDir, 'MatrixImpulses');
+    mkdir($pluginMatrixDataDir);
+    $pluginTempDataDir = catdir($pluginDataDir, 'Temp');
+    mkdir($pluginTempDataDir);
+    
+    # Other initializations
+    $convolver = "SqueezeDSP";
+    $logfile = catdir(Slim::Utils::OSDetect::dirsFor('log'), "squeezdspnativedsd.log");
+
+	#$gainLog = catdir(Slim::Utils::OSDetect::dirsFor('log'), "gain.log");  # add this
+	
+   # $myconfigrevision = Plugins::SqueezeDSPNativeDSD::TemplateConfig::get_config_revision();
+    # ======== END: VARIABLE INITIALIZATION ========
+
+    Plugins::SqueezeDSPNativeDSD::Utils::debug("plugin " . $revision . " enabled");
+
+    # Register json/CLI functions
+    Slim::Control::Request::addDispatch([$thistag . '.filters'], [1, 1, 0, \&Plugins::SqueezeDSPNativeDSD::UI_Functions::filtersQuery]);
+    Slim::Control::Request::addDispatch([$thistag . '.saveas'], [1, 1, 1, \&Plugins::SqueezeDSPNativeDSD::UI_Functions::saveasCommand]);
+    Slim::Control::Request::addDispatch([$thistag . '.logsummary'], [1, 1, 0, \&Plugins::SqueezeDSPNativeDSD::UI_Functions::logsummaryQuery]);
+    Slim::Control::Request::addDispatch([$thistag . '.saveall'], [1, 1, 1, \&Plugins::SqueezeDSPNativeDSD::UI_Functions::saveallCommand]);
+    Slim::Control::Request::addDispatch([$thistag . '.readclientSettings'], [1, 1, 1, \&Plugins::SqueezeDSPNativeDSD::UI_Functions::readClientSettings]);
+    Slim::Control::Request::addDispatch([$thistag . '.readpresetSettings'], [1, 1, 1, \&Plugins::SqueezeDSPNativeDSD::UI_Functions::readPresetSettings]);
+    Slim::Control::Request::addDispatch([$thistag . '.importwav'], [1, 1, 1, \&Plugins::SqueezeDSPNativeDSD::UI_Functions::importwavCommand]);
+	Slim::Control::Request::addDispatch([ $thistag . '.deletepreset' ], [ 1, 1, 1, \&Plugins::SqueezeDSPNativeDSD::UI_Functions::deletepresetCommand ]);
+    Slim::Control::Request::addDispatch([$thistag . '.clearlog'], [1, 1, 0, \&Plugins::SqueezeDSPNativeDSD::UI_Functions::clearlogCommand]);
+
+	Slim::Control::Request::addDispatch([$thistag . '.trackgain'], [1, 1, 0, \&Plugins::SqueezeDSPNativeDSD::Utils::_trackGainQuery]);
+
+
+
+    # Binary setup and housekeeping
+    Plugins::SqueezeDSPNativeDSD::Binary::setup_binary($class);
+    Plugins::SqueezeDSPNativeDSD::Binary::housekeeping();
+    Plugins::SqueezeDSPNativeDSD::Configuration::removeNativeConversion();
+
+    # Event subscription
+    #Slim::Control::Request::subscribe(\&clientEvent, [['client'],['new', 'reconnect']]);
+	Slim::Control::Request::subscribe(\&clientEventNew, [['client'],['new']]);
+	Slim::Control::Request::subscribe(\&clientEventReconnect, [['client'],['reconnect']]);
+
+	# add this for gain logging
+	#Slim::Control::Request::subscribe(\&_trackChanged, [['playlist'],['newsong']]);
+
+	# will clear cache on server start, so changing js files works
+	$cacheBust = time();
+
+}
+
+sub shutdown {
+    Slim::Control::Request::unsubscribe(\&clientEvent);
+	#gain logging
+	Slim::Control::Request::unsubscribe(\&_trackChanged);  # add this
+}
+
+
+
+sub clientEventNew {
+    my $request = shift;
+    my $client  = $request->client();
+    return unless defined $client;
+	Plugins::SqueezeDSPNativeDSD::Utils::debug( "New Client detected" );
+    Plugins::SqueezeDSPNativeDSD::Configuration::initConfiguration($client);
+}
+
+sub clientEventReconnect {
+    my $request = shift;
+    my $client  = $request->client();
+    return unless defined $client;
+	Plugins::SqueezeDSPNativeDSD::Utils::debug( "Existing Client reconnected" );
+    Plugins::SqueezeDSPNativeDSD::Configuration::initConfiguration($client);
+	Plugins::SqueezeDSPNativeDSD::Configuration::removeNativeConversion();
+}
+
+sub webPages {
+    my $class = shift;
+    if (Slim::Utils::PluginManager->isEnabled("Plugins::SqueezeDSPNativeDSD::Plugin")) {
+        Slim::Web::Pages->addPageFunction("plugins/SqueezeDSPNativeDSD/index.html", \&handleWebIndex);
+        Slim::Web::Pages->addPageLinks("plugins", { $class->getDisplayName => 'plugins/SqueezeDSPNativeDSD/index.html' });
+    } else {
+        Slim::Web::Pages->addPageLinks("plugins", { $class->getDisplayName => undef });
+        Slim::Web::Pages->addPageLinks("icons", { $class->getDisplayName => undef });
+    }
+}
+
+
+sub handleWebIndex {
+    my ($client, $params) = @_;
+    $params->{cacheBust} = $cacheBust;
+    return Slim::Web::HTTP::filltemplatefile('plugins/SqueezeDSPNativeDSD/index.html', $params) if $client;
+}
+
+
+sub getFunctions { return \%noFunctions; }
+sub getDisplayName { return 'PLUGIN_SQUEEZDSPNATIVEDSD_DISPLAYNAME'; }
+sub enabled { return 1; }
+sub getpluginVersion { return $revision; }
+
+
+
+1;
